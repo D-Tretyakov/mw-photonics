@@ -1,21 +1,28 @@
+from sympy.plotting import plot
 
-class BaseElement():
+
+class BaseElement:
     """
     Base ("abstract") class for all elements.
 
     arguments:
-    transform - a transform applied to the
-                function got from input node and
-                passed to output node
+    transform: a transform applied to the
+               function got from input node and
+               passed to output node
     """
 
     def __init__(self, transform):
         self._transform = transform
         self._input_node = None
         self._output_node = None
+        self._plot = None
     
     def apply_transform(self):
         raise NotImplementedError
+
+    @property
+    def transform(self):
+        return self._transform
 
     @property
     def input_node(self):
@@ -40,3 +47,13 @@ class BaseElement():
         else:
             # TODO change error class
             raise RuntimeError(f'Invalid output node class: {type(node)}')
+
+    def plot_transform(self, show=True, save=False, element_name=None):
+        self._plot = plot(self._transform, show=False)
+
+        if save:
+            name = element_name if element_name else type(self).__name__
+            self._plot.save(f'{name}_transform_plot.png')
+
+        if show:
+            self._plot.show()
