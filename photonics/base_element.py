@@ -1,5 +1,3 @@
-from sympy.plotting import plot
-
 
 class BaseElement:
     """
@@ -11,10 +9,11 @@ class BaseElement:
                passed to output node
     """
 
-    def __init__(self, transform):
-        self._transform = transform
+    def __init__(self):
+        self._transform = None
         self._input_node = None
         self._output_node = None
+        self._input_signal = None
         self._plot = None
     
     def apply_transform(self):
@@ -32,6 +31,7 @@ class BaseElement:
     def input_node(self, node):
         if isinstance(node, BaseElement):
             self._input_node = node
+            self._input_signal = self.input_node.apply_transform()
         else:
             # TODO change error class
             raise RuntimeError(f'Invalid input node class: {type(node)}')
@@ -47,13 +47,3 @@ class BaseElement:
         else:
             # TODO change error class
             raise RuntimeError(f'Invalid output node class: {type(node)}')
-
-    def plot_transform(self, show=True, save=False, element_name=None):
-        self._plot = plot(self._transform, show=False)
-
-        if save:
-            name = element_name if element_name else type(self).__name__
-            self._plot.save(f'{name}_transform_plot.png')
-
-        if show:
-            self._plot.show()
