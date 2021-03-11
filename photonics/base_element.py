@@ -15,7 +15,8 @@ class BaseElement:
         self._output_node = None
     
     def apply_transform(self):
-        raise NotImplementedError
+        if self.input_node is None:
+            raise RuntimeError('Not connected')
 
     @property
     def input_node(self):
