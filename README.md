@@ -19,10 +19,12 @@ laser = Laser('gauss', 550, 5, 9) # Создаем объект лазера
 fiber = Fiber() # Создаем объект волновода
 fiber.input_node = laser # На вход волновода идет сигнал от лазера
 
-laser.transform.plot(save=True, name='laser_plot.png') # Сохраняем график сигнала на выходе из лазера в .png файл
+# Сохраняем график сигнала на выходе из лазера в .png файл
+laser.transform.plot(save=True, name='laser_plot.png') 
 ```
 ![laser_plot.png](https://github.com/D-Tretyakov/mw-photonics/blob/main/example/laser_plot.png?raw=true)
 ```
-fiber.apply_transform().plot(save=True, name='fiber_plot.png') # Сохраняем график сигнала на выходе из волновода
+# Сохраняем график сигнала на выходе из волновода
+fiber.apply_transform().plot(save=True, name='fiber_plot.png')
 ```
 ![fiber_plot.png](https://github.com/D-Tretyakov/mw-photonics/blob/main/example/fiber_plot.png?raw=true)
