@@ -1,14 +1,5 @@
 
 class BaseElement:
-    """
-    Base ("abstract") class for all elements.
-
-    arguments:
-    transform: a transform applied to the
-               function got from input node and
-               passed to output node
-    """
-
     def __init__(self):
         self.transform = None
         self._input_node = None
