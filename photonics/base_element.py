@@ -10,18 +10,12 @@ class BaseElement:
     """
 
     def __init__(self):
-        self._transform = None
+        self.transform = None
         self._input_node = None
         self._output_node = None
-        self._input_signal = None
-        self._plot = None
     
     def apply_transform(self):
         raise NotImplementedError
-
-    @property
-    def transform(self):
-        return self._transform
 
     @property
     def input_node(self):
@@ -31,7 +25,6 @@ class BaseElement:
     def input_node(self, node):
         if isinstance(node, BaseElement):
             self._input_node = node
-            self._input_signal = self.input_node.apply_transform()
         else:
             # TODO change error class
             raise RuntimeError(f'Invalid input node class: {type(node)}')
