@@ -1,5 +1,19 @@
-import sympy
-from .BaseElement import BaseElement
+import numpy as np
+
+from .base_element import BaseElement
+from .transform import Transform
+
+class GaussFunction(Transform):
+    def __init__(self, a, b, plot_xrange=[-5, 5], plot_yrange=[0, 10], n_points=101):
+        super().__init__(plot_xrange, plot_yrange, n_points)
+        self.x = np.linspace(*plot_xrange, n_points)
+        self.y = a*np.exp(-(self.x**2)/b)
+
+class StepFunction(Transform):
+    def __init__(self, a, b, plot_xrange=[-5, 5], plot_yrange=[0, 10], n_points=101):
+        super().__init__(plot_xrange, plot_yrange, n_points)
+        self.x = np.linspace(*plot_xrange, n_points)
+        self.y = np.heaviside(self.x+b/2, 0) - np.heaviside(self.x-b/2, 0)
 
 
 class Laser(BaseElement):
@@ -13,25 +27,20 @@ class Laser(BaseElement):
     max_intensity:  max intensity value
     """
 
-    def __init__(self, transform_type, wavelength, delta, max_intensity):
+    def __init__(self, transform_type, wavelength, width, max_intensity):
+        super().__init__()
+        
         self._transform_type = transform_type
         self._wavelength = wavelength
-        self._delta = delta
+        self._width = width
         self._max_intensity = max_intensity
 
-        t = sympy.symbols('t')
         if self._transform_type == 'gauss':
-            transform = sympy.exp(-t**2)
+            self.transform = GaussFunction(max_intensity, width)
         elif self._transform_type == 'step':
-            transform = sympy.Piecewise(
-                (0, t < -1), 
-                (1, ((-1 < t) & (t < 1))), 
-                (0, t > 1)
-            )
+            self.transform = StepFunction(max_intensity, width)
         else:
-            raise RecursionError('Transform type can be only "gauss" or "step"')
-
-        super().__init__(transform)
+            raise RuntimeError('Transform type can be only "gauss" or "step"')
 
     def apply_transform(self):
         return self.transform
